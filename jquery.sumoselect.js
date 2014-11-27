@@ -231,24 +231,26 @@
                     var O = this;
                     li.click(function () {
                         var li = $(this);
-                        txt = "";
-                        if (O.is_multi) {
-                            li.toggleClass('selected');
-                            O.E.find('option[value="' + li.attr('data-val') + '"]')[0].selected = li.hasClass('selected');
+                        if (!li.hasClass("disabled")) {
+	                        txt = "";
+	                        if (O.is_multi) {
+	                            li.toggleClass('selected');
+	                            O.E.find('option[value="' + li.attr('data-val') + '"]')[0].selected = li.hasClass('selected');
+	                        }
+	                        else {
+	                            li.parent().find('li.selected').removeClass('selected'); //if not multiselect then remove all selections from this list
+	                            li.toggleClass('selected');
+	                            O.E.val(li.attr('data-val'));   //set the value of select element
+	                        }
+	
+	                        //branch for combined change event.
+	                        if (!(O.is_multi && settings.triggerChangeCombined && (O.is_floating || settings.okCancelInMulti))) {
+	                            O.setText();
+	                            O.E.trigger('change');
+	                        }
+	
+				if (!O.is_multi) O.hideOpts(); //if its not a multiselect then hide on single select.
                         }
-                        else {
-                            li.parent().find('li.selected').removeClass('selected'); //if not multiselect then remove all selections from this list
-                            li.toggleClass('selected');
-                            O.E.val(li.attr('data-val'));   //set the value of select element
-                        }
-
-                        //branch for combined change event.
-                        if (!(O.is_multi && settings.triggerChangeCombined && (O.is_floating || settings.okCancelInMulti))) {
-                            O.setText();
-                            O.E.trigger('change');
-                        }
-
-                        if (!O.is_multi) O.hideOpts(); //if its not a multiselect then hide on single select.
                     });
                 },
 
